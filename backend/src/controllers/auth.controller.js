@@ -1,13 +1,15 @@
 import { User } from "../models/user.model.js";
 import asyncHandler from "../utils/AsyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+
 
 // Register callback function
 const register = asyncHandler(async (req, res) => {
     const newUser = new User({ ...req.body, role: "admin" });
     await newUser.save();
-
-    res.status(201).json({ status: "success", message: "User registered successfully" });
+    const response = new ApiResponse(201, null, "User registered successfully");
+    res.status(201).json(response);
 });
 
 // Login callback function
@@ -18,8 +20,12 @@ const login = asyncHandler(async (req, res) => {
     if (!user || !(await user.isPasswordCorrect(password))) {
         throw new ApiError(401, "Invalid credentials");
     }
+
     const token = user.generateAccessToken();
-    res.status(200).json({ status: "success",message: "login success", token });
+
+    const response = new ApiResponse(200, { token }, "Login success");
+
+    res.status(200).json(response);
 });
 
 const authController = {

@@ -14,7 +14,7 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, config.jwt.secret);
-        const user = await User.findById(decoded.id); // Assuming the token contains the user ID
+        const user = await User.findById(decoded.id).populate('org'); // Assuming the token contains the user ID
 
         if (!user) {
             throw new ApiError(404, "User not found");

@@ -1,6 +1,8 @@
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import asyncHandler from "../utils/AsyncHandler.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { Organization } from "../models/organization.model.js";
 
 // Get all employees with pagination, search, and sorting
 const getAllEmployees = asyncHandler(async (req, res) => {
@@ -13,7 +15,7 @@ const getAllEmployees = asyncHandler(async (req, res) => {
     } = req.query;
 
     const query = {
-        createdBy: req.user._id,
+        org: req.user.org._id,
         deleted: { $ne: true },
         $or: [
             { fullName: { $regex: search, $options: "i" } },
@@ -25,75 +27,93 @@ const getAllEmployees = asyncHandler(async (req, res) => {
     const sortOrder = order === "asc" ? 1 : -1;
 
     const employees = await User.find(query)
+        .select("-password") // Exclude the password field
         .sort({ [sortBy]: sortOrder })
         .skip((page - 1) * limit)
         .limit(parseInt(limit));
 
     const totalEmployees = await User.countDocuments(query);
-
-    res.status(200).json({
-        status: "success",
-        employees: {
+    
+    const response = new ApiResponse(
+        200,
+        {
             employees,
             totalPages: Math.ceil(totalEmployees / limit),
             currentPage: parseInt(page),
-        },
-    });
+        }
+    );
+
+    res.status(200).json(response);
 });
 
 // Get a single employee by ID
 const getEmployeeById = asyncHandler(async (req, res) => {
-    const employee = await User.findById(req.params.id);
+    const employee = await User.findById(req.params.id).populate("org");
     if (!employee) {
         throw new ApiError(404, "Employee not found");
     }
-    res.status(200).json({ status: "success", data: employee });
+
+    const response = new ApiResponse(200, employee);
+
+    res.status(200).json(response);
 });
 
 // Create a new employee
 const createEmployee = asyncHandler(async (req, res) => {
+    if (!req.user.isAdmin) {
+        throw new ApiError(403, "Forbidden: Only admins can create employees");
+    }
     const employee = new User({
         ...req.body,
         createdBy: req.user._id,
         org: req.user.org,
     });
     const newEmployee = await employee.save();
-    res.status(201).json({
-        status: "success",
-        message: "Employee created successfully",
-    });
+    const response = new ApiResponse(201, null, "Employee created successfully");
+    res.status(201).json(response);
 });
 
 // Update an existing employee
 const updateEmployee = asyncHandler(async (req, res) => {
-    const updatedEmployee = await User.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true }
-    );
-    updateEmployee.updatedBy = req.user._id;
-    await updatedEmployee.save();
-    if (!updatedEmployee) {
-        throw new ApiError(404, "Employee not found");
-    }
-    res.status(200).json({
-        status: "success",
-        message: "Employee updated successfully",
-    });
-});
-
-// Delete an employee
-const deleteEmployee = asyncHandler(async (req, res) => {
     const employee = await User.findById(req.params.id);
     if (!employee) {
         throw new ApiError(404, "Employee not found");
     }
+    if (!req.user.isAdmin && req.user._id.toString() !== employee._id.toString()) {
+        throw new ApiError(403, "Forbidden: Only admins or the user himself can update employee details");
+    }
+    Object.assign(employee, req.body);
+    employee.updatedBy = req.user._id;
+    await employee.save();
+    const response = new ApiResponse(200, null, "Employee updated successfully");
+    res.status(200).json(response);
+});
+
+// Delete an employee
+const deleteEmployee = asyncHandler(async (req, res) => {
+    const employee = await User.findById(req.params.id).populate("org");
+    if (!employee) {
+        throw new ApiError(404, "Employee not found");
+    }
+    if (employee.org.createdBy.toString() === employee._id.toString()) {
+        if (req.user._id.toString() !== employee._id.toString()) {
+            throw new ApiError(403, "Forbidden: Only the creator of the organization can delete himself");
+        }
+        // Set the organization and all its referenced users to deleted
+        const org = await Organization.findById(employee.org._id);
+        org.deleted = true;
+        await org.save();
+        await User.updateMany({ org: employee.org._id }, { deleted: true });
+        const response = new ApiResponse(204, null, "Owner and organization deleted successfully");
+        return res.status(204).json(response);
+    } else if (!req.user.isAdmin) {
+        throw new ApiError(403, "Forbidden: Only admins can delete employees");
+    }
     employee.deleted = true;
     await employee.save();
-    res.status(204).json({
-        status: "success",
-        message: "Employee deleted successfully"
-    });
+
+    const response = new ApiResponse(204, null, "Employee deleted successfully");
+    res.status(204).json(response);
 });
 
 const employeeController = {
