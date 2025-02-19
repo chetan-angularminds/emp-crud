@@ -13,7 +13,9 @@ const getAllEmployees = asyncHandler(async (req, res) => {
         sortBy = "createdAt",
         order = "asc",
     } = req.query;
-
+    if(!req.user.org){
+        throw new ApiError(400, "User does not belongs to an Organization");
+    }
     const query = {
         org: req.user.org._id,
         deleted: { $ne: true },
@@ -116,12 +118,41 @@ const deleteEmployee = asyncHandler(async (req, res) => {
     res.status(204).json(response);
 });
 
+// Change password callback function
+const changePassword = asyncHandler(async (req, res) => {
+    const { oldPassword, newPassword} = req.body;
+    const employeeId = req.params.id;
+    if (!employeeId) {
+        throw new ApiError(400, "Employee ID is required");
+    }
+    if (!req.user.isAdmin && req.user._id.toString() !== employeeId) {
+        throw new ApiError(403, "Forbidden: Only admins or the user himself can change password");
+    }
+
+    const user = await User.findById(employeeId);
+
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+    const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
+    if (!isPasswordCorrect) {
+        throw new ApiError(401, "Old password is incorrect");
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    const response = new ApiResponse(200, null, "Password changed successfully");
+    res.status(200).json(response);
+});
+
 const employeeController = {
     getAllEmployees,
     getEmployeeById,
     createEmployee,
     updateEmployee,
     deleteEmployee,
+    changePassword
 };
 
 export default employeeController;

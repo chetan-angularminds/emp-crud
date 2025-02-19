@@ -9,7 +9,9 @@ router.use(authMiddleware);
 router
     .route("/")
     .get(orgController.getOrganisationDetails)
-    .post(orgController.createOrganisation);
+    .post(orgController.createOrganisation)
+    .put(orgController.updateOrganisation)
+    .delete(orgController.deleteOrganisation);
 
 
 export default router;

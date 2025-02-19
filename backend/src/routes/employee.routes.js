@@ -13,6 +13,7 @@ router
 router
     .route("/employee/:id")
     .get(employeeController.getEmployeeById)
+    .post(employeeController.changePassword)
     .put(employeeController.updateEmployee)
     .delete(employeeController.deleteEmployee);
 

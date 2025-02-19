@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import { AiOutlineSortAscending, AiOutlineSortDescending } from "react-icons/ai";
 
@@ -82,6 +83,7 @@ const Employees: React.FC = () => {
     setEmployees(employees.filter((employee) => employee._id !== id));
   };
 
+ 
   const handleAddOrUpdate = (employee: any) => {
     if (modalType === "add") {
       setEmployees([...employees, { ...employee, _id: Date.now().toString() }]);
@@ -103,7 +105,7 @@ const Employees: React.FC = () => {
     .filter((employee) =>
       employee.fullName.toLowerCase().includes(searchTerm.toLowerCase())
     )
-    .sort((a, b) => {
+    .sort((a: any, b:any) => {
       if (sortOrder === "asc") {
         return a[sortBy].localeCompare(b[sortBy]);
       } else {

@@ -11,20 +11,26 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
     if (!token) {
         throw new ApiError(401, "Access token is missing or invalid");
     }
+    let decoded;
 
     try {
-        const decoded = jwt.verify(token, config.jwt.secret);
-        const user = await User.findById(decoded.id).populate('org'); // Assuming the token contains the user ID
+        decoded = jwt.verify(token, config.jwt.secret);
+        
+    } catch (err) {
+        throw new ApiError(403, "Invalid token");
+    }
+    const user = await User.findById(decoded.id).populate('org'); // Assuming the token contains the user ID
 
         if (!user) {
             throw new ApiError(404, "User not found");
+        } else if (!user.status) {
+            throw new ApiError(403, "User is inactive");
+        } else if (user.deleted) {
+            throw new ApiError(403, "User is deleted");
         }
 
         req.user = user;
         next();
-    } catch (err) {
-        throw new ApiError(403, "Invalid token");
-    }
 });
 
 export default authMiddleware;

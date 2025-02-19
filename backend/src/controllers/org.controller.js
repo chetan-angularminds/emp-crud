@@ -93,7 +93,6 @@ const orgController = {
     updateOrganisation,
     deleteOrganisation,
     createOrganisation,
-    getOrganisationDetails
 };
 
 export default orgController;

@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
+import AuthService from '../services/auth.service';
+import { useNavigate } from 'react-router-dom';
+import { getToast } from '../services/toasts.service';
 
-const Register: React.FC = () => {
+function Register(){
+    const authService: AuthService = new AuthService();
+    const Navigate = useNavigate();
     const [formData, setFormData] = useState({
-        fullname: '',
-        username: '',
+        fullName: '',
+        userName: '',
         email: '',
         contactNumber: '',
         password: '',
@@ -11,30 +16,51 @@ const Register: React.FC = () => {
     });
 
     const [errors, setErrors] = useState({
-        fullname: '',
-        username: '',
+        fullName: '',
+        userName: '',
         email: '',
         contactNumber: '',
         password: '',
         confirmPassword: '',
     });
+    const [isConfirmPasswordTouched, setIsConfirmPasswordTouched] = useState(false);
 
+    React.useEffect(() => {
+        if (isConfirmPasswordTouched) {
+            if (formData.password !== formData.confirmPassword) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    confirmPassword: 'Passwords do not match',
+                }));
+            } else {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    confirmPassword: '',
+                }));
+            }
+        }
+    }, [formData.password, formData.confirmPassword, isConfirmPasswordTouched]);
+
+    const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setIsConfirmPasswordTouched(true);
+        handleChange(e);
+    };
     const validate = () => {
         let valid = true;
         const newErrors = { ...errors };
 
-        if (!formData.fullname) {
-            newErrors.fullname = 'Full name is required';
+        if (!formData.fullName) {
+            newErrors.fullName = 'Full name is required';
             valid = false;
         } else {
-            newErrors.fullname = '';
+            newErrors.fullName = '';
         }
 
-        if (!formData.username) {
-            newErrors.username = 'Username is required';
+        if (!formData.userName) {
+            newErrors.userName = 'userName is required';
             valid = false;
         } else {
-            newErrors.username = '';
+            newErrors.userName = '';
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -76,13 +102,27 @@ const Register: React.FC = () => {
             ...formData,
             [e.target.name]: e.target.value,
         });
+        
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (validate()) {
-            // Submit form
             console.log('Form submitted', formData);
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const {confirmPassword, ...userDetails} = formData;
+            
+            const response = await authService.register(userDetails);
+
+            if (response.success) {
+                console.log('User registered successfully');
+                getToast('success', 'User registered successfully!');
+                Navigate('/auth/login');
+            } else {            
+                console.log('Error registering user', response);
+                getToast('error', response.message);
+            }
+
         }
     };
 
@@ -94,23 +134,23 @@ const Register: React.FC = () => {
                     <label className="block text-gray-700">Full Name</label>
                     <input
                         type="text"
-                        name="fullname"
-                        value={formData.fullname}
+                        name="fullName"
+                        value={formData.fullName}
                         onChange={handleChange}
                         className="w-full p-2 border border-gray-300 rounded mt-1"
                     />
-                    {errors.fullname && <p className="text-red-500 text-sm">{errors.fullname}</p>}
+                    {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName}</p>}
                 </div>
                 <div className="mb-4">
-                    <label className="block text-gray-700">Username</label>
+                    <label className="block text-gray-700">userName</label>
                     <input
                         type="text"
-                        name="username"
-                        value={formData.username}
+                        name="userName"
+                        value={formData.userName}
                         onChange={handleChange}
                         className="w-full p-2 border border-gray-300 rounded mt-1"
                     />
-                    {errors.username && <p className="text-red-500 text-sm">{errors.username}</p>}
+                    {errors.userName && <p className="text-red-500 text-sm">{errors.userName}</p>}
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700">Email</label>
@@ -140,7 +180,7 @@ const Register: React.FC = () => {
                         type="password"
                         name="password"
                         value={formData.password}
-                        onChange={handleChange}
+                        onChange={(e)=>{handleChange(e)}}
                         className="w-full p-2 border border-gray-300 rounded mt-1"
                     />
                     {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
@@ -151,7 +191,7 @@ const Register: React.FC = () => {
                         type="password"
                         name="confirmPassword"
                         value={formData.confirmPassword}
-                        onChange={handleChange}
+                        onChange={(e)=>{handleChange(e); handleConfirmPasswordChange(e)}}
                         className="w-full p-2 border border-gray-300 rounded mt-1"
                     />
                     {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}

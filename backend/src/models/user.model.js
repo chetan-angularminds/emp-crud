@@ -58,6 +58,9 @@ const userSchema = mongoose.Schema(
             enum: ["active", "inactive"],
             default: "active",
         },
+        salary: {
+            type: Number
+        },
         org: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Organization",
