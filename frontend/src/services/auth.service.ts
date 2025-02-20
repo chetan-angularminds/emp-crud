@@ -46,7 +46,6 @@ export default class AuthService {
   async changePassword(data: {
     oldPassword: string;
     newPassword: string;
-    employeeId?: string;
   }): Promise<response> {
     return api
       .put<response, response>("auth/change-password", data, {

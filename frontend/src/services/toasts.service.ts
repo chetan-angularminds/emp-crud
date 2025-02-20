@@ -15,4 +15,4 @@ export const getToast = (
       title: msg,
     });
   };
-  
+

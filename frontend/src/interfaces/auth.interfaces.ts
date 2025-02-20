@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface credentials {
   userName: string;
   password: string;
@@ -11,7 +12,7 @@ export interface registrationDetails {
   contactNumber: string;
 }
 export interface response {
-  data: object | null;
+  data: {[key: string]: any;} | null;
   success: boolean;
   message: string;
   statusCode: number;

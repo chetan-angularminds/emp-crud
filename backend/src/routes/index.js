@@ -2,6 +2,7 @@ import express from "express";
 import authRoute from "./auth.routes.js";
 import employeeRoute from "./employee.routes.js";
 import orgRoute from "./org.routes.js";
+import userRoute from "./user.routes.js"
 const router = express.Router();
 // Routes index
 const defaultRoutes = [
@@ -16,6 +17,10 @@ const defaultRoutes = [
     {
         path: "/org",
         route: orgRoute
+    },
+    {
+      path: "/user",
+      route: userRoute
     }
   ];
   

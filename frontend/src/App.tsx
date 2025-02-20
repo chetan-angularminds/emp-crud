@@ -1,13 +1,16 @@
 import "./App.css";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Register from './pages/register';
 import Login from './pages/login';
 import OrganisationDetails from './pages/organisation';
-import Employees from './pages/employees';
+import Employees from './pages/employees/employees';
 import { Navigate } from "react-router-dom";
 import { JSX } from "react";
+import { getToast } from "./services/toasts.service";
+import UserProfile from "./pages/my-profile";
 function App() {
+  const location = useLocation();
 
   const isAuthenticated = () => {
     // Add your authentication logic here
@@ -17,17 +20,22 @@ function App() {
   const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     return isAuthenticated() ? children : <Navigate to="/auth/login" />;
   };
+  const CanAccess = ({ children }: { children: JSX.Element }) => {
+    if(isAuthenticated()) getToast("error", "user is already logged in")
+    return !isAuthenticated() ? children : <Navigate to="/" />;
+  };
   return (
     <>
-    <Navbar/>
-      <main className="main-content">
-      <Routes>
-        <Route path="/" element={<ProtectedRoute><Employees /></ProtectedRoute>} />
-        <Route path="/auth">
-          <Route path="/auth/register" element={<Register />} />
-          <Route path="/auth/login" element={<Login />} />
-        </Route>
-        <Route path="/organisation" element={<ProtectedRoute><OrganisationDetails /></ProtectedRoute>} />
+      {!location.pathname.includes('/auth') && <Navbar /> }
+      <main className="main pt-6 w-[100%]">
+      <Routes>  
+      <Route path="/" element={<ProtectedRoute><Employees /></ProtectedRoute>} />
+      <Route path="/my-profile" element={<ProtectedRoute><UserProfile/></ProtectedRoute>} />
+      <Route path="/auth">
+      <Route path="/auth/register" element={<CanAccess><Register /></CanAccess>} />
+      <Route path="/auth/login" element={<CanAccess><Login /></CanAccess>} />
+      </Route>
+      <Route path="/organisation" element={<ProtectedRoute><OrganisationDetails /></ProtectedRoute>} />
       </Routes>
       </main>
     </>

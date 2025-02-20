@@ -62,7 +62,9 @@ const getEmployeeById = asyncHandler(async (req, res) => {
 
 // Create a new employee
 const createEmployee = asyncHandler(async (req, res) => {
-    if (!req.user.isAdmin) {
+    console.log(req.user);
+    
+    if (!req.user.role === "admin") {
         throw new ApiError(403, "Forbidden: Only admins can create employees");
     }
     const employee = new User({
@@ -81,7 +83,7 @@ const updateEmployee = asyncHandler(async (req, res) => {
     if (!employee) {
         throw new ApiError(404, "Employee not found");
     }
-    if (!req.user.isAdmin && req.user._id.toString() !== employee._id.toString()) {
+    if (!req.user.role === "admin" && req.user._id.toString() !== employee._id.toString()) {
         throw new ApiError(403, "Forbidden: Only admins or the user himself can update employee details");
     }
     Object.assign(employee, req.body);
@@ -94,6 +96,7 @@ const updateEmployee = asyncHandler(async (req, res) => {
 // Delete an employee
 const deleteEmployee = asyncHandler(async (req, res) => {
     const employee = await User.findById(req.params.id).populate("org");
+    console.log(req.user.role);
     if (!employee) {
         throw new ApiError(404, "Employee not found");
     }
@@ -108,24 +111,24 @@ const deleteEmployee = asyncHandler(async (req, res) => {
         await User.updateMany({ org: employee.org._id }, { deleted: true });
         const response = new ApiResponse(204, null, "Owner and organization deleted successfully");
         return res.status(204).json(response);
-    } else if (!req.user.isAdmin) {
+    } else if (!req.user.role === "admin") {
         throw new ApiError(403, "Forbidden: Only admins can delete employees");
     }
     employee.deleted = true;
     await employee.save();
 
     const response = new ApiResponse(204, null, "Employee deleted successfully");
-    res.status(204).json(response);
+    res.status(201).json(response);
 });
 
 // Change password callback function
 const changePassword = asyncHandler(async (req, res) => {
-    const { oldPassword, newPassword} = req.body;
+    const { newPassword} = req.body;
     const employeeId = req.params.id;
     if (!employeeId) {
         throw new ApiError(400, "Employee ID is required");
     }
-    if (!req.user.isAdmin && req.user._id.toString() !== employeeId) {
+    if (!!req.user.role === "admin" && req.user._id.toString() !== employeeId) {
         throw new ApiError(403, "Forbidden: Only admins or the user himself can change password");
     }
 
@@ -134,10 +137,7 @@ const changePassword = asyncHandler(async (req, res) => {
     if (!user) {
         throw new ApiError(404, "User not found");
     }
-    const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
-    if (!isPasswordCorrect) {
-        throw new ApiError(401, "Old password is incorrect");
-    }
+
 
     user.password = newPassword;
     await user.save();

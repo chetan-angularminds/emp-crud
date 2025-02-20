@@ -1,5 +1,5 @@
 import { response } from "../interfaces/auth.interfaces";
-import { employee } from "../interfaces/employee.interfaces";
+import { Employee, NewEmployee } from "../interfaces/employee.interfaces";
 import api from "./api.service";
 import AuthService from "./auth.service";
 
@@ -37,7 +37,7 @@ export default class EmployeeService {
         return err.response.data;
       });
   }
-  async createEmployee(employee: employee): Promise<response> {
+  async createEmployee(employee: NewEmployee): Promise<response> {
     return api
       .post<response, response>("employees", employee, {
         headers: {
@@ -52,9 +52,9 @@ export default class EmployeeService {
         return err.response.data;
       });
   }
-  async updateEmployee(employee: employee): Promise<response> {
+  async updateEmployee(employee: Employee, id: string): Promise<response> {
     return api
-      .put<response, response>("employees", employee, {
+      .put<response, response>(`employees/employee/${id}`, employee, {
         headers: {
           Authorization: `Bearer ${this.authService.getAccessToken()}`,
         },
@@ -69,17 +69,33 @@ export default class EmployeeService {
   }
   async deleteEmployee(id: string): Promise<response> {
     return api
-      .delete<response, response>(`employees/${id}`, {
+      .delete<response, response>(`employees/employee/${id}`, {
         headers: {
           Authorization: `Bearer ${this.authService.getAccessToken()}`,
         },
       })
       .then((response) => {
+        console.log(response);
+        
         return response.data;
       })
       .catch((err) => {
         console.log(err);
         return err.response.data;
       });
+  }
+
+  async changePassword(id: string, newPassword: string){
+    return api.post<response, response>(`employees/employee/${id}`,{newPassword},{
+      headers: {
+        Authorization: `Bearer ${this.authService.getAccessToken()}`,
+      },
+    }).then((response) => {
+      return response.data;
+    })
+    .catch((err) => {
+      console.log(err);
+      return err.response.data;
+    });
   }
 }

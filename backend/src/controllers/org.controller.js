@@ -45,7 +45,7 @@ const updateOrganisation = asyncHandler(async (req, res) => {
     if (!user.org) {
         throw new ApiError(404, "Organisation not found");
     }
-    if (!user.isAdmin) {
+    if (!!req.user.role === "admin") {
         throw new ApiError(403, "You do not have permission to update this organisation");
     }
 

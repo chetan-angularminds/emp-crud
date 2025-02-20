@@ -1,8 +1,20 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/auth/login");
+  };
+
+  const handleProfile = () => {
+    navigate("/my-profile");
+  };
+
   return (
     <nav className="bg-blue-500 p-4">
       <div className={"container mx-auto flex justify-between items-center"}>
@@ -52,6 +64,34 @@ const Navbar: React.FC = () => {
             </Link>
           </li>
         </ul>
+        <div className="relative">
+          <button
+            className="flex items-center text-white focus:outline-none"
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+          >
+            <img
+              src="/path/to/profile-logo.png"
+              alt="Profile"
+              className="h-8 w-8 rounded-full"
+            />
+          </button>
+          {dropdownOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2">
+              <button
+                onClick={handleProfile}
+                className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
+              >
+                My Profile
+              </button>
+              <button
+                onClick={handleLogout}
+                className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
+              >
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
       </div>
       <div
         className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${

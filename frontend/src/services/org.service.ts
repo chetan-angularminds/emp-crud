@@ -40,7 +40,11 @@ export default class orgService {
 
   async createOrg(org: org): Promise<response> {
     return api
-      .post<response, response>("org", org)
+      .post<response, response>("org", org,{
+        headers: {
+          Authorization: `Bearer ${this.authService.getAccessToken()}`,
+        },
+      })
       .then((response) => {
         return response.data;
       })

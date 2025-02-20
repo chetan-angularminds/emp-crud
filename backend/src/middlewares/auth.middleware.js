@@ -19,7 +19,7 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
     } catch (err) {
         throw new ApiError(403, "Invalid token");
     }
-    const user = await User.findById(decoded.id).populate('org'); // Assuming the token contains the user ID
+    const user = await User.findById(decoded.id).select("-password").populate('org'); // Assuming the token contains the user ID
 
         if (!user) {
             throw new ApiError(404, "User not found");
