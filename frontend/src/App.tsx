@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import "./App.css";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
@@ -23,6 +24,9 @@ function App() {
     useEffect(()=>{
       authService.isAuthenticated().then((response)=>{
         setResult(response) 
+      }).catch((_err)=>{
+        setResult(false)
+        getToast("error", _err.message)
       })
     },[])
     if (!result) {

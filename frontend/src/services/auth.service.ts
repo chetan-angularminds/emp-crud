@@ -38,7 +38,7 @@ export default class AuthService {
         return true;
       })
       .catch((_err) => {
-        getToast("error", _err.response.data.message)
+        getToast("error", _err.response?.data?.message||"unable to access")
         return false
       });
   }
