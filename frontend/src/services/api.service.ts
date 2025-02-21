@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const HOST_URL = "http://192.168.0.39:3200/api/";
+const HOST_URL = "https://emp-crud-6c99.onrender.com/api/";
 
 const api = axios.create({
   baseURL: HOST_URL,
