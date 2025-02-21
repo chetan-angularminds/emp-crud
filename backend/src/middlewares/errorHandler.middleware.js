@@ -5,7 +5,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 const errorResponseGenerator = (err) => { 
     let error = { ...err };
     error.message = err.message;
-    let response = new ApiResponse(error.statusCode, null, error.message)
+    let response = new ApiResponse(error.statusCode, null, error.message, err.redirect ? err.redirect:null)
     if (error?.errorResponse?.code === 11000) {
         response = handleDuplicateKeyError(error);
     }

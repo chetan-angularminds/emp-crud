@@ -65,6 +65,8 @@ export default function EmployeeList() {
         setTotalPages(response?.data?.totalPages);
       } else {
         getToast("error", response.message);
+        console.log(response);
+        
         if(response.redirect) Navigate(response.redirect)
       }
     });
