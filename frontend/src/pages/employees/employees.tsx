@@ -210,7 +210,7 @@ export default function EmployeeList() {
           </div>
         </div>
       </div>
-      <div className=" overflow-x-auto">
+      <div className={employees.length>5 ? "overflow-x-auto":""}>
         <table className=" w-full border-collapse">
           <thead>
             <tr className="bg-gray-100">

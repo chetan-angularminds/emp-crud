@@ -58,6 +58,7 @@ const OrganisationDetails: React.FC = () => {
         setOrg(response?.data?.organisation);
         setIsEditing(false);
         getToast("success", response.message);
+        await fetchOrgDetails();
       } else {
         getToast("error", response.message);
       }
@@ -67,6 +68,7 @@ const OrganisationDetails: React.FC = () => {
         setOrg(response?.data?.organisation);
         setIsEditing(false);
         getToast("success", response.message);
+        await  fetchOrgDetails();
       } else {
         getToast("error", response.message);
       }
