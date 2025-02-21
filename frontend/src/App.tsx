@@ -20,14 +20,16 @@ function App() {
   };
 
   const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-    const [result, setResult] = useState(true);
+    const [result, setResult] = useState(authService.getAccessToken()? true: false);
     useEffect(()=>{
-      authService.isAuthenticated().then((response)=>{
-        setResult(response) 
-      }).catch((_err)=>{
-        setResult(false)
-        getToast("error", _err.message)
-      })
+      if (result){
+        authService.isAuthenticated().then((response)=>{
+          setResult(response) 
+        }).catch((_err)=>{
+          setResult(false)
+          getToast("error", _err.message)
+        })
+      }
     },[])
     if (!result) {
       authService.logout()

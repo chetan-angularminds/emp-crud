@@ -87,6 +87,7 @@ const LoginPage: React.FC = () => {
                             <p className="mt-1 text-sm text-red-600">{errors.password}</p>
                         )}
                     </div>
+                    <p className='text-center'>Don't have an account? <span className='text-blue-400 cursor-pointer' onClick={()=>{Navigate('/auth/register')}}>Register Here</span></p>
                     <button
                         type="submit"
                         className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"

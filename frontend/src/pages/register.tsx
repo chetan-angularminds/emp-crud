@@ -221,6 +221,17 @@ function Register() {
               <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
             )}
           </div>
+          <p className="text-center">
+            Already have an account?{" "}
+            <span
+              className="text-blue-400 cursor-pointer"
+              onClick={() => {
+                Navigate("/auth/login");
+              }}
+            >
+              Login Here
+            </span>
+          </p>
           <button
             type="submit"
             className="w-full bg-blue-500 text-white p-2 rounded mt-4"
