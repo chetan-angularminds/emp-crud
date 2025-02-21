@@ -6,19 +6,29 @@ import Login from './pages/login';
 import OrganisationDetails from './pages/organisation';
 import Employees from './pages/employees/employees';
 import { Navigate } from "react-router-dom";
-import { JSX } from "react";
+import { JSX, useEffect, useState } from "react";
 import { getToast } from "./services/toasts.service";
 import UserProfile from "./pages/my-profile";
+import AuthService from "./services/auth.service";
 function App() {
   const location = useLocation();
-
+ const authService = new AuthService();
   const isAuthenticated = () => {
     // Add your authentication logic here
     return localStorage.getItem("token") !== null;
   };
 
   const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-    return isAuthenticated() ? children : <Navigate to="/auth/login" />;
+    const [result, setResult] = useState(true);
+    useEffect(()=>{
+      authService.isAuthenticated().then((response)=>{
+        setResult(response) 
+      })
+    },[])
+    if (!result) {
+      authService.logout()
+    }
+    return result ? children : <Navigate to="/auth/login" />;
   };
   const CanAccess = ({ children }: { children: JSX.Element }) => {
     if(isAuthenticated()) getToast("error", "user is already logged in")

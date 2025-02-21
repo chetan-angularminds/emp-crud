@@ -28,7 +28,7 @@ export default class UserService{
             return err.response.data
           })
     }
-    async deleteEmployee(): Promise<response> {
+    async deleteAccount(): Promise<response> {
         return api
           .delete<response, response>(`user`, {
             headers: {

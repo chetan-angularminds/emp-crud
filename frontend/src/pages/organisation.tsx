@@ -3,11 +3,14 @@ import { org } from "../interfaces/org.interfaces";
 import OrgService from "./../services/org.service";
 import { getToast } from "../services/toasts.service";
 import ConfirmationDialog from "./employees/confirmationDialogueBox";
+import AuthService from "../services/auth.service";
 
 const OrganisationDetails: React.FC = () => {
   const [org, setOrg] = useState<org | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const authService: AuthService= new AuthService();
   const [formData, setFormData] = useState<org>({
     _id: "",
     name: "",
@@ -20,6 +23,11 @@ const OrganisationDetails: React.FC = () => {
 
   useEffect(() => {
     fetchOrgDetails();
+    authService.isAdmin().then((response)=>{
+      console.log(response);
+      
+      setIsAdmin(response);
+    })
   }, []);
 
   const fetchOrgDetails = async () => {
@@ -112,27 +120,31 @@ const OrganisationDetails: React.FC = () => {
         className="w-full p-2 border rounded"
         required
       />
-      {org && <div className="flex justify-end space-x-2">
+      {org && (
+        <div className="flex justify-end space-x-2">
+          <button
+            type="button"
+            onClick={() => setIsEditing(false)}
+            className="px-4 py-2 text-gray-600 bg-gray-200 rounded hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+          >
+            {org ? "Update" : "Add"}
+          </button>
+        </div>
+      )}
+      {!org && (
         <button
-          type="button"
-          onClick={() => setIsEditing(false)}
-          className="px-4 py-2 text-gray-600 bg-gray-200 rounded hover:bg-gray-300"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
-        >
-          {org ? "Update" : "Add"}
-        </button>
-      </div>}
-      {!org && <button
           type="submit"
           className="w-full px-4 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600"
         >
           {org ? "Update" : "Add"}
-        </button>}
+        </button>
+      )}
     </form>
   );
 
@@ -148,7 +160,7 @@ const OrganisationDetails: React.FC = () => {
       <p>
         <strong>Email:</strong> {org?.email}
       </p>
-      <div className="flex justify-end space-x-2">
+      {isAdmin && <div className="flex justify-end space-x-2">
         <button
           onClick={() => setIsEditing(true)}
           className="px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600"
@@ -156,12 +168,12 @@ const OrganisationDetails: React.FC = () => {
           Edit
         </button>
         <button
-          onClick={()=>setShowDeleteConfirmation(true)}
+          onClick={() => setShowDeleteConfirmation(true)}
           className="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
         >
           Delete
         </button>
-      </div>
+      </div>}
     </div>
   );
 
@@ -169,8 +181,19 @@ const OrganisationDetails: React.FC = () => {
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
       <h1 className="text-3xl font-bold mb-6">Organization Details</h1>
       {org && !isEditing ? renderOrgDetails() : renderForm()}
-      
-      {showDeleteConfirmation && <ConfirmationDialog message="Are you sure you want to delete organisation ? All the employees will also be deleted." onCancel={()=>{setShowDeleteConfirmation(false)}} onConfirm={()=>{handleDelete();setShowDeleteConfirmation(false)}}/>}
+
+      {showDeleteConfirmation && (
+        <ConfirmationDialog
+          message="Are you sure you want to delete organisation ? All the employees will also be deleted."
+          onCancel={() => {
+            setShowDeleteConfirmation(false);
+          }}
+          onConfirm={() => {
+            handleDelete();
+            setShowDeleteConfirmation(false);
+          }}
+        />
+      )}
     </div>
   );
 };

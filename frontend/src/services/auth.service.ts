@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import api from "./api.service.ts";
 import {
   credentials,
   registrationDetails,
   response,
 } from "../interfaces/auth.interfaces";
+import { getToast } from "./toasts.service.ts";
 
 export default class AuthService {
   async login(credentials: credentials): Promise<response> {
@@ -24,9 +27,37 @@ export default class AuthService {
   logout() {
     localStorage.removeItem("token");
   }
-  isAuthenticated() {
-    return localStorage.getItem("token") !== null;
+  async isAuthenticated() :Promise<boolean>{
+    return api
+      .get("/auth/verify-user", {
+        headers: {
+          Authorization: `Bearer ${this.getAccessToken()}`,
+        },
+      })
+      .then((_response:any) => {
+        return true;
+      })
+      .catch((_err) => {
+        getToast("error", _err.response.data.message)
+        return false
+      });
   }
+
+  async isAdmin() :Promise<boolean>{
+    return api
+      .get("/auth/verify-admin", {
+        headers: {
+          Authorization: `Bearer ${this.getAccessToken()}`,
+        },
+      })
+      .then((_response:any) => {
+        return true;
+      })
+      .catch((_err) => {
+        return false
+      });
+  }
+
   getAccessToken() {
     const token: string | null = localStorage.getItem("token");
     return token;
@@ -48,7 +79,7 @@ export default class AuthService {
     newPassword: string;
   }): Promise<response> {
     return api
-      .put<response, response>("auth/change-password", data, {
+      .post<response, response>("auth/change-password", data, {
         headers: {
           Authorization: `Bearer ${this.getAccessToken()}`,
         },

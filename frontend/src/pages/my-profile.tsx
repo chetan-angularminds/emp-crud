@@ -98,7 +98,7 @@ export default function UserProfile() {
     // Here you would typically send an API request to delete the user account
     console.log("Deleting account");
     // Add your API call here
-    userService.deleteEmployee().then((response) => {
+    userService.deleteAccount().then((response) => {
       console.log(response);
 
       if (response.success) {

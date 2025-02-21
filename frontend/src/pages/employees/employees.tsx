@@ -18,6 +18,7 @@ import ChangePasswordForm from "./changePasswordForm";
 import ConfirmationDialog from "./confirmationDialogueBox";
 import { Employee, NewEmployee } from "../../interfaces/employee.interfaces";
 import { getToast } from "../../services/toasts.service";
+import AuthService from "../../services/auth.service";
 
 interface SortConfig {
   key: keyof Employee;
@@ -44,6 +45,8 @@ export default function EmployeeList() {
     null
   );
   const [jumpToPage, setJumpToPage] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
+  const authService: AuthService = new AuthService();
 
   const fetchEmployees = useCallback(() => {
     const queryParams = {
@@ -66,6 +69,11 @@ export default function EmployeeList() {
 
   useEffect(() => {
     fetchEmployees();
+    authService.isAdmin().then((response) => {
+      console.log(response);
+
+      setIsAdmin(response);
+    });
   }, [fetchEmployees]);
 
   const handleSort = (key: keyof Employee) => {
@@ -95,9 +103,9 @@ export default function EmployeeList() {
       if (response.success) {
         fetchEmployees();
         setShowAddForm(false);
-        getToast("success", response.message)
-      } else{
-        getToast("error", response.message)
+        getToast("success", response.message);
+      } else {
+        getToast("error", response.message);
       }
     });
   };
@@ -109,9 +117,9 @@ export default function EmployeeList() {
         if (response.success) {
           fetchEmployees();
           setShowUpdateForm(false);
-          getToast("success", response.message)
+          getToast("success", response.message);
         } else {
-          getToast("error", response.message)
+          getToast("error", response.message);
         }
       });
   };
@@ -120,9 +128,9 @@ export default function EmployeeList() {
     employeeService.changePassword(employeeId, newPassword).then((response) => {
       if (response.success) {
         setShowChangePasswordForm(false);
-        getToast("success", response.message)
-      }else{
-        getToast("error", response.message)
+        getToast("success", response.message);
+      } else {
+        getToast("error", response.message);
       }
     });
   };
@@ -155,7 +163,12 @@ export default function EmployeeList() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 text-sm" onClick={() => {if(showOptions) setShowOptions(false)}}>
+    <div
+      className="container mx-auto px-4 py-8 text-sm"
+      onClick={() => {
+        if (showOptions) setShowOptions(false);
+      }}
+    >
       <h1 className="text-3xl font-bold mb-6">Employee List</h1>
       <div className="mb-4 flex flex-col sm:flex-row justify-between items-center">
         <div className="relative w-full sm:w-64 mb-4 sm:mb-0">
@@ -169,12 +182,14 @@ export default function EmployeeList() {
           <FaSearch className="absolute left-3 top-3 text-gray-400" />
         </div>
         <div className="flex items-center space-x-4">
-          <button
-            className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-            onClick={() => setShowAddForm(true)}
-          >
-            Add Employee
-          </button>
+          {isAdmin && (
+            <button
+              className="px-4 py-2 bg-teal-400 text-white font-bold shadow-md rounded-md hover:bg-teal-500"
+              onClick={() => setShowAddForm(true)}
+            >
+              Add Employee
+            </button>
+          )}
           <div className="flex items-center">
             <span className="mr-2">Show:</span>
             <select
@@ -224,82 +239,94 @@ export default function EmployeeList() {
               >
                 Status {renderSortIcon("status")}
               </th>
-              <th
-                className="p-2 text-left cursor-pointer"
-                onClick={() => handleSort("salary")}
-              >
-                Salary {renderSortIcon("salary")}
-              </th>
-              <th className="p-2 text-left">Actions</th>
+              {isAdmin && (
+                <th
+                  className="p-2 text-left cursor-pointer"
+                  onClick={() => handleSort("salary")}
+                >
+                  Salary {renderSortIcon("salary")}
+                </th>
+              )}
+              {isAdmin && <th className="p-2 text-left">Actions</th>}
             </tr>
           </thead>
           <tbody>
-            {employees.map((employee,i) => (
+            {employees.map((employee, i) => (
               <tr key={employee._id} className="border-b hover:bg-gray-50">
-              <td className="p-2">{employee.fullName}</td>
-              <td className="p-2">{employee.email}</td>
-              <td className="p-2">{employee.contactNumber}</td>
-              <td className="p-2">{employee.role}</td>
-              <td className="p-2">{employee.status}</td>
-              <td className="p-2">&#8377;{employee.salary}</td>
-              <td className="p-2">
-                <div className="relative">
-                <button
-                  className="text-gray-500 hover:text-gray-700"
-                  onClick={() => {
-                  setShowUpdateForm(false);
-                  setShowChangePasswordForm(false);
-                  setShowDeleteConfirmation(false);
-                  if (selectedEmployee == employee) {
-                    setShowOptions(!showOptions);
-                  } else setShowOptions(true);
-                  setSelectedEmployee(employee);
-                  }}
-                >
-                  <FaEllipsisV />
-                </button>
-                {showOptions && selectedEmployee?._id === employee._id && (
-                    <div
-                  className="absolute z-999 right-0 mt-2 w-48 bg-white rounded-md shadow-lg"
-                  onClick={(e) => e.stopPropagation()}
-                  style={i>1?{ bottom: '100%', transform: 'translateY(-10%)' }:{}}
-                  >
-                  <div className="py-1">
-                    <button
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => {
-                      setSelectedEmployee(employee);
-                      setShowUpdateForm(true);
-                      setShowOptions(false);
-                    }}
-                    >
-                    Update Details
-                    </button>
-                    <button
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => {
-                      setSelectedEmployee(employee);
-                      setShowChangePasswordForm(true);
-                      setShowOptions(false);
-                    }}
-                    >
-                    Change Password
-                    </button>
-                    <button
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => {
-                      setSelectedEmployee(employee);
-                      setShowDeleteConfirmation(true);
-                      setShowOptions(false);
-                    }}
-                    >
-                    Delete Employee
-                    </button>
-                  </div>
-                  </div>
+                <td className="p-2">{employee.fullName}</td>
+                <td className="p-2">{employee.email}</td>
+                <td className="p-2">{employee.contactNumber}</td>
+                <td className="p-2">{employee.role}</td>
+                <td className="p-2">{employee.status}</td>
+                {isAdmin && <td className="p-2">&#8377;{employee.salary}</td>}
+                {isAdmin && (
+                  <td className="p-2">
+                    <div className="relative">
+                      <button
+                        className="text-gray-500 hover:text-gray-700"
+                        onClick={() => {
+                          setShowUpdateForm(false);
+                          setShowChangePasswordForm(false);
+                          setShowDeleteConfirmation(false);
+                          if (selectedEmployee == employee) {
+                            setShowOptions(!showOptions);
+                          } else setShowOptions(true);
+                          setSelectedEmployee(employee);
+                        }}
+                      >
+                        <FaEllipsisV />
+                      </button>
+                      {showOptions &&
+                        selectedEmployee?._id === employee._id && (
+                          <div
+                            className="absolute z-990 right-0 mt-2 w-48 bg-white rounded-md shadow-lg"
+                            onClick={(e) => e.stopPropagation()}
+                            style={
+                              i > 1
+                                ? {
+                                    bottom: "100%",
+                                    transform: "translateY(-10%)",
+                                  }
+                                : {}
+                            }
+                          >
+                            <div className="py-1">
+                              <button
+                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                onClick={() => {
+                                  setSelectedEmployee(employee);
+                                  setShowUpdateForm(true);
+                                  setShowOptions(false);
+                                }}
+                              >
+                                Update Details
+                              </button>
+                              <button
+                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                onClick={() => {
+                                  setSelectedEmployee(employee);
+                                  setShowChangePasswordForm(true);
+                                  setShowOptions(false);
+                                }}
+                              >
+                                Change Password
+                              </button>
+                              <button
+                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                onClick={() => {
+                                  setSelectedEmployee(employee);
+                                  setShowDeleteConfirmation(true);
+                                  setShowOptions(false);
+                                }}
+                              >
+                                Delete Employee
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                    </div>
+                  </td>
                 )}
-                </div>
-              </td>
               </tr>
             ))}
           </tbody>
@@ -342,7 +369,7 @@ export default function EmployeeList() {
           />
           <button
             type="submit"
-            className="px-4 py-2 rounded-md bg-blue-500 text-white text-sm"
+            className="px-4 py-1.5 rounded-md bg-blue-500 text-white text-sm font-bold"
           >
             Go
           </button>

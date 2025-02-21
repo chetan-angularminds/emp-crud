@@ -23,7 +23,7 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 
         if (!user) {
             throw new ApiError(404, "User not found");
-        } else if (!user.status) {
+        } else if (user.status==="inactive") {
             throw new ApiError(403, "User is inactive");
         } else if (user.deleted) {
             throw new ApiError(403, "User is deleted");

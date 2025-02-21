@@ -9,8 +9,8 @@ const requestLoggerMiddleware = async (req, res, next) => {
   try {
     // Check token in headers or cookies
     const token = req.headers.authorization?.split(' ')[1] || req.cookies?.token;
-
-    if (token) {
+    
+    if (token && token !== null) {
       const decodedToken = jwt.verify(token, config.jwt.secret); // Replace with your JWT secret
       userId = decodedToken?.id || null; // Assuming the token contains the user's ID
     }
