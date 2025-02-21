@@ -7,7 +7,6 @@ import {
   response,
 } from "../interfaces/auth.interfaces";
 import { getToast } from "./toasts.service.ts";
-
 export default class AuthService {
   async login(credentials: credentials): Promise<response> {
     return api
@@ -38,6 +37,7 @@ export default class AuthService {
         return true;
       })
       .catch((_err) => {
+        getToast("error", _err?.response?.data?.message||'failed to fetch')
         return false
       });
   }
