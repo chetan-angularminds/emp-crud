@@ -24,7 +24,9 @@ function App() {
     useEffect(()=>{
       if (result){
         authService.isAuthenticated().then((response)=>{
-          setResult(response) 
+          if (!result) {
+            setResult(response) 
+          }
         }).catch((_err)=>{
           setResult(false)
           getToast("error", _err.message)

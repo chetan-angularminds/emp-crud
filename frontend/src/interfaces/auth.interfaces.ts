@@ -16,4 +16,5 @@ export interface response {
   success: boolean;
   message: string;
   statusCode: number;
+  redirect?:string;
 }

@@ -19,6 +19,7 @@ import ConfirmationDialog from "./confirmationDialogueBox";
 import { Employee, NewEmployee } from "../../interfaces/employee.interfaces";
 import { getToast } from "../../services/toasts.service";
 import AuthService from "../../services/auth.service";
+import { useNavigate } from "react-router-dom";
 
 interface SortConfig {
   key: keyof Employee;
@@ -27,6 +28,7 @@ interface SortConfig {
 
 export default function EmployeeList() {
   const employeeService = new EmployeeService();
+  const Navigate = useNavigate()
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -63,6 +65,7 @@ export default function EmployeeList() {
         setTotalPages(response?.data?.totalPages);
       } else {
         getToast("error", response.message);
+        if(response.redirect) Navigate(response.redirect)
       }
     });
   }, [currentPage, itemsPerPage, searchTerm, sortConfig]);
@@ -74,7 +77,7 @@ export default function EmployeeList() {
 
       setIsAdmin(response);
     });
-  }, [fetchEmployees]);
+  }, []);
 
   const handleSort = (key: keyof Employee) => {
     setSortConfig((prevConfig) => ({

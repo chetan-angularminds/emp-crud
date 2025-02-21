@@ -14,7 +14,7 @@ const getAllEmployees = asyncHandler(async (req, res) => {
         order = "asc",
     } = req.query;
     if(!req.user.org){
-        throw new ApiError(400, "User does not belongs to an Organization");
+        throw new ApiError(400, "User does not belongs to an Organization", '/organisation');
     }
     const query = {
         org: req.user.org._id,
