@@ -79,7 +79,7 @@ export default function EmployeeList() {
 
       setIsAdmin(response);
     });
-  }, []);
+  }, [fetchEmployees]);
 
   const handleSort = (key: keyof Employee) => {
     setSortConfig((prevConfig) => ({
