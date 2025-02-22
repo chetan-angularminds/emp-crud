@@ -45,7 +45,7 @@ function App() {
   return (
     <>
       {!location.pathname.includes('/auth') && <Navbar /> }
-      <main className="main pt-6 w-[100%]">
+      <main className="main pt-6 w-[100%] ">
       <Routes>  
       <Route path="/" element={<ProtectedRoute><Employees /></ProtectedRoute>} />
       <Route path="/my-profile" element={<ProtectedRoute><UserProfile/></ProtectedRoute>} />

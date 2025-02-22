@@ -11,7 +11,7 @@ dotenv.config({
 connectDB()
     .then(() => {
         
-        app.listen(config.port || 5000, "0.0.0.0", () => {
+        app.listen(config.port || 5000, () => {
             const host = getHostIpAddress();
             const port = config.port || 5000;
             console.log(`Server is running at Port : ${port}`);

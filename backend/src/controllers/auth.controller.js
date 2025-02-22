@@ -30,6 +30,8 @@ const login = asyncHandler(async (req, res) => {
         throw new ApiError(403, "User is inactive");
     }
     const token = user.generateAccessToken();
+    console.log(req.ip);
+    
 
     const response = new ApiResponse(200, { token }, "Login success");
 

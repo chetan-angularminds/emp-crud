@@ -33,8 +33,8 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-    <nav className="bg-blue-500 p-4">
-      <div className={"container mx-auto flex justify-between items-center"}>
+    <nav className="bg-blue-500 p-4 dark:bg-blue-900">
+      <div className={"container mx-auto flex justify-between items-center "}>
         <div className={"text-white text-lg font-bold"}>
           <Link to="/">Employee Manager</Link>
         </div>

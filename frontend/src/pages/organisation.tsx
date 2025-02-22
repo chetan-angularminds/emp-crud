@@ -209,7 +209,7 @@ const loader = ()=>(
         </div>
 )
   return (<>
-    {!isLoading && <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+    {!isLoading && <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md dark:bg-slate-600 dark:text-white">
       <h1 className="text-3xl font-bold mb-6">Organization Details</h1>
       {org && !isEditing  ? renderOrgDetails() : renderForm()}
 
