@@ -28,7 +28,7 @@ export default function ChangeProfilePasswordForm({ onSubmit, onClose }: ChangeP
 
   return (
     <div className="fixed inset-0 z-999 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg w-full max-w-md">
+      <div className="bg-white dark:bg-slate-700 dark:text-white p-6 rounded-lg w-full max-w-md">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Change Password</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">

@@ -41,7 +41,7 @@ export default function AddEmployeeForm({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4">
-      <div className="bg-white p-6 rounded-lg w-full max-w-md max-h-full overflow-y-auto">
+      <div className="bg-white p-6 rounded-lg w-full max-w-md max-h-full overflow-y-auto dark:bg-slate-600">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Add New Employee</h2>
           <button

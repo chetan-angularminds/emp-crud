@@ -112,11 +112,11 @@ export default function UserProfile() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-8 bg-gradient-to-br from-blue-50 to-indigo-100 shadow-2xl rounded-xl">
+    <div className="max-w-2xl mx-auto p-8 bg-indigo-100 shadow-2xl rounded-xl dark:bg-slate-400">
       <h2 className="text-3xl font-bold mb-8 text-center text-indigo-800">
         User Profile
       </h2>
-      <div className="bg-white p-6 rounded-lg shadow-inner">
+      <div className="bg-white dark:bg-slate-300 p-6 rounded-lg shadow-inner">
         {!isEditing ? (
           <div className="space-y-6">
             {Object.entries(user).map(([key, value]) => (

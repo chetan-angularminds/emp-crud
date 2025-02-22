@@ -7,7 +7,7 @@ interface ConfirmationDialogProps {
   export default function ConfirmationDialog({ message, onConfirm, onCancel }: ConfirmationDialogProps) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-        <div className="bg-white p-6 rounded-lg w-full max-w-md">
+        <div className="bg-white p-6 rounded-lg w-full max-w-md dark:bg-slate-700">
           <h2 className="text-xl font-bold mb-4">Confirm Action</h2>
           <p className="mb-6">{message}</p>
           <div className="flex justify-end space-x-4">

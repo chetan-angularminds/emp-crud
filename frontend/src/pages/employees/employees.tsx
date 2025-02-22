@@ -310,7 +310,7 @@ export default function EmployeeList() {
                         {showOptions &&
                           selectedEmployee?._id === employee._id && (
                             <div
-                              className="absolute z-990 right-0 mt-2 w-48 bg-white rounded-md shadow-lg"
+                              className="absolute z-990 right-0 mt-2 w-48 bg-white rounded-md shadow-lg dark:bg-slate-700"
                               onClick={(e) => e.stopPropagation()}
                               style={
                                 i > 1
@@ -323,7 +323,7 @@ export default function EmployeeList() {
                             >
                               <div className="py-1">
                                 <button
-                                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-500 dark:text-white"
                                   onClick={() => {
                                     setSelectedEmployee(employee);
                                     setShowUpdateForm(true);
@@ -333,7 +333,7 @@ export default function EmployeeList() {
                                   Update Details
                                 </button>
                                 <button
-                                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-500 dark:text-white"
                                   onClick={() => {
                                     setSelectedEmployee(employee);
                                     setShowChangePasswordForm(true);
@@ -343,7 +343,7 @@ export default function EmployeeList() {
                                   Change Password
                                 </button>
                                 <button
-                                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-500 dark:text-white"
                                   onClick={() => {
                                     setSelectedEmployee(employee);
                                     setShowDeleteConfirmation(true);
