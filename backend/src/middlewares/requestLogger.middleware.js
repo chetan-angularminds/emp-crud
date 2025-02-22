@@ -43,12 +43,12 @@ const requestLoggerMiddleware = async (req, res, next) => {
       if (res.statusCode >= 400) {
         errorMessage = responseData?.message || 'Unknown error occurred';
       }
-      
+
       const logEntry = new RequestLog({
         requestType: req.headers['content-type'] || 'Unknown',
         requestStatus: res.statusCode >= 400 ? 'Failed' : 'Successful',
         errors: errorMessage, // Capture the error message here
-        ipAddress: req.headers['x-forwarded-for'] || req.ip,
+        ipAddress: req.ip,
         origin: req.headers.origin || 'Unknown',
         requestMethod: req.method,
         requestUrl: req.originalUrl,

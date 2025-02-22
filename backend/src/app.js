@@ -14,6 +14,8 @@ const corsConfig = cors({
     origin: "*",
     credentials: true,
 });
+app.set('trust proxy', true);
+
 // Use morgan to log requests with colors
 app.use(morgan((tokens, req, res) => {
     const status = tokens.status(req, res);
