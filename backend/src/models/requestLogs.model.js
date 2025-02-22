@@ -6,7 +6,7 @@ const requestLogSchema = new Schema(
         requestType: { type: String, required: true },
         requestStatus: { type: String, required: true },
         errors: { type: String },
-        ipAddress: { type: String, required: true },
+        ipAddress: { type: Object, required: true },
         origin: { type: String, required: true },
         requestMethod: { type: String, required: true },
         requestUrl: { type: String, required: true },

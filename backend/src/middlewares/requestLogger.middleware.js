@@ -1,6 +1,22 @@
 import jwt from 'jsonwebtoken';
 import RequestLog from './../models/requestLogs.model.js';
 import { config } from './../config/config.js';
+
+
+const getIpDetails = (req) => {
+  return {
+      clientIp: req.headers['x-forwarded-for']?.split(',')[0].trim() || 
+                req.headers['x-real-ip'] || 
+                req.headers['x-client-ip'] || 
+                req.socket.remoteAddress, // Best guess for real client IP
+      xForwardedFor: req.headers['x-forwarded-for'] || '',
+      xRealIp: req.headers['x-real-ip'] || '',
+      xClientIp: req.headers['x-client-ip'] || '',
+      remoteAddress: req.socket.remoteAddress || '',
+      reqIP: req.ip
+  };
+};
+
 const requestLoggerMiddleware = async (req, res, next) => {
   const start = Date.now(); // Track response time
   let userId = null;
@@ -48,7 +64,7 @@ const requestLoggerMiddleware = async (req, res, next) => {
         requestType: req.headers['content-type'] || 'Unknown',
         requestStatus: res.statusCode >= 400 ? 'Failed' : 'Successful',
         errors: errorMessage, // Capture the error message here
-        ipAddress: req.ip,
+        ipAddress: getIpDetails(req),
         origin: req.headers.origin || 'Unknown',
         requestMethod: req.method,
         requestUrl: req.originalUrl,
