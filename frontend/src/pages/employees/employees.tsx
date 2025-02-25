@@ -108,7 +108,16 @@ export default function EmployeeList() {
 
   const handleAddEmployee = (newEmployee: NewEmployee) => {
     const { confirmPassword, ...data } = newEmployee;
-    employeeService.createEmployee(data).then((response) => {
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      if(key ==="profileImage"){
+        formData.append("avatar", value as string);
+      } else {
+        formData.append(key, value as string);
+      }
+      
+    });
+    employeeService.createEmployee(formData).then((response) => {
       if (response.success) {
         fetchEmployees();
         setShowAddForm(false);

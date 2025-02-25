@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface credentials {
-  userName: string;
+  email: string;
   password: string;
 }
 
@@ -12,9 +12,25 @@ export interface registrationDetails {
   contactNumber: string;
 }
 export interface response {
-  data: {[key: string]: any;} | null;
+  data: { [key: string]: any } | null;
   success: boolean;
   message: string;
   statusCode: number;
-  redirect?:string;
+  redirect?: string;
+}
+
+export interface User {
+  org: { [key: string]: any } | null | string;
+  fullName: string;
+  email: string;
+  contactNumber: string;
+  role: string;
+  status: string;
+  salary: number;
+  avatar: { url: string; publicId: string };
+  gender: string;
+  age: number;
+  joiningDate: string;
+  department: string;
+  [key: string]: any;
 }

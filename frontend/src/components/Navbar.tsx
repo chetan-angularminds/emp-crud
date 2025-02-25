@@ -1,21 +1,39 @@
-import React, { useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { CgProfile } from "react-icons/cg";
 import ChangeProfilePasswordForm from "./changePasswordForm";
 import AuthService from "../services/auth.service";
 import { getToast } from "../services/toasts.service";
+import userService from "../services/user.service";
+import { User } from "../interfaces/auth.interfaces";
+
+
 const Navbar: React.FC = () => {
   const authService: AuthService = new AuthService();
+
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showChangePasswordForm, setShowChangePasswordForm] = useState(false);
+  const [user, setUser] = useState<User|null>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/auth/login");
   };
-
+  useEffect(()=>{
+    setIsLoading(true)
+    userService.user$.subscribe((user)=>{
+      setUser(user);
+    })
+    async function getDetails():Promise<any>{
+      setIsLoading(true)
+      await userService.getProfileDetails();
+      setIsLoading(false)
+    }
+    getDetails();
+  },[])
   const handleProfile = () => {
     navigate("/my-profile");
   };
@@ -80,10 +98,11 @@ const Navbar: React.FC = () => {
         </ul>
         <div className="relative">
           <button
-            className="flex items-center text-white focus:outline-none"
+            className="flex items-center text-white focus:outline-none h-10 w-10 rounded-full overflow-hidden"
             onClick={() => setDropdownOpen(!dropdownOpen)}
           >
-            <CgProfile className="h-8 w-8 rounded-full"/>
+            
+            {!isLoading && <img src={user?.avatar?.url ? user?.avatar?.url : `https://avatar.iran.liara.run/public/${user?.gender ==="Male" ? "boy":user?.gender==="Female"? "girl":""}?name=${user?.fullName}`  } className=" "/>}
           </button>
           {dropdownOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-700  rounded-md shadow-lg py-2">

@@ -134,67 +134,67 @@ function Register() {
   };
 
   return (
-    <div className="my-20">
-      <div className=" flex justify-center items-center h-screen bg-gray-100">
+    <div className=" h-full">
+      <div className=" flex justify-center items-center h-fit bg-gray-100  py-6 dark:bg-slate-800">
         <form
-          className="bg-white p-8 rounded shadow-md w-full max-w-md"
+          className="bg-white p-8 rounded shadow-md w-full max-w-md dark:bg-slate-600"
           onSubmit={handleSubmit}
         >
-          <h2 className="text-2xl font-bold mb-6">Register</h2>
+          <h2 className="text-2xl font-bold mb-6 dark:text-white">Register</h2>
           <div className="mb-4">
-            <label className="block text-gray-700">Full Name</label>
+            <label className="block text-gray-700 dark:text-gray-300">Full Name</label>
             <input
               type="text"
               name="fullName"
               value={formData.fullName}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded mt-1"
+              className="w-full p-2 border border-gray-300 rounded mt-1 dark:text-gray-300"
             />
             {errors.fullName && (
               <p className="text-red-500 text-sm">{errors.fullName}</p>
             )}
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">userName</label>
+            <label className="block text-gray-700 dark:text-gray-300">userName</label>
             <input
               type="text"
               name="userName"
               value={formData.userName}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded mt-1"
+              className="w-full p-2 border border-gray-300 rounded mt-1 dark:text-gray-300"
             />
             {errors.userName && (
               <p className="text-red-500 text-sm">{errors.userName}</p>
             )}
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Email</label>
+            <label className="block text-gray-700 dark:text-gray-300">Email</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded mt-1"
+              className="w-full p-2 border border-gray-300 rounded mt-1 dark:text-gray-300"
             />
             {errors.email && (
               <p className="text-red-500 text-sm">{errors.email}</p>
             )}
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Contact Number</label>
+            <label className="block text-gray-700 dark:text-gray-300">Contact Number</label>
             <input
               type="text"
               name="contactNumber"
               value={formData.contactNumber}
               onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded mt-1"
+              className="w-full p-2 border border-gray-300 rounded mt-1 dark:text-gray-300"
             />
             {errors.contactNumber && (
               <p className="text-red-500 text-sm">{errors.contactNumber}</p>
             )}
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Password</label>
+            <label className="block text-gray-700 dark:text-gray-300">Password</label>
             <input
               type="password"
               name="password"
@@ -202,14 +202,14 @@ function Register() {
               onChange={(e) => {
                 handleChange(e);
               }}
-              className="w-full p-2 border border-gray-300 rounded mt-1"
+              className="w-full p-2 border border-gray-300 rounded mt-1 dark:text-gray-300"
             />
             {errors.password && (
               <p className="text-red-500 text-sm">{errors.password}</p>
             )}
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Confirm Password</label>
+            <label className="block text-gray-700 dark:text-gray-300">Confirm Password</label>
             <input
               type="password"
               name="confirmPassword"
@@ -218,16 +218,16 @@ function Register() {
                 handleChange(e);
                 handleConfirmPasswordChange(e);
               }}
-              className="w-full p-2 border border-gray-300 rounded mt-1"
+              className="w-full p-2 border border-gray-300 rounded mt-1 dark:text-gray-300"
             />
             {errors.confirmPassword && (
               <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
             )}
           </div>
-          <p className="text-center">
+          <p className="text-center dark:text-white">
             Already have an account?{" "}
             <span
-              className="text-blue-400 cursor-pointer"
+              className="text-blue-400 cursor-pointer "
               onClick={() => {
                 Navigate("/auth/login");
               }}

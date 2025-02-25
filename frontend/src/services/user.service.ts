@@ -1,10 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { response } from "../interfaces/auth.interfaces";
+import { response, User } from "../interfaces/auth.interfaces";
 import api from "./api.service";
 import AuthService from "./auth.service";
+import { BehaviorSubject } from 'rxjs';
+import { getToast } from "./toasts.service";
 
-export default class UserService{
+class UserService{
     private authService: AuthService = new AuthService();
+    private userSubject: BehaviorSubject<User|null> = new BehaviorSubject<User|null>(null);
+    constructor(){
+      // this.getProfileDetails();
+    }
+    get user$() {
+      return this.userSubject.asObservable();
+    }
+
+    setUserDetails(details: any) {
+      this.userSubject.next(details);
+    }
+
 
     async getProfileDetails(){
         return api.get<response, response>("user", {
@@ -12,11 +26,38 @@ export default class UserService{
               Authorization: `Bearer ${this.authService.getAccessToken()}`,
             },
           }).then((response)=>{
+            const userDetails = response?.data?.data
+            console.log(userDetails);
+            
+            this.setUserDetails(userDetails)
             return response.data
           }).catch((err)=>{
+            getToast("error",  err.response.data.message);
             return err.response.data
           })
     }
+    async deleteProfilePicture(){
+      return api.delete<response, response>("user/profile-picture",{
+        headers: {
+          Authorization: `Bearer ${this.authService.getAccessToken()}`,
+        },
+      }).then((response)=>{
+        return response.data
+      }).catch((err)=>{
+        return err.response.data
+      })
+    }
+    async updateUserProfilePicture(details:any){
+      return api.put<response, response>("user/profile-picture", details,{
+          headers: {
+            Authorization: `Bearer ${this.authService.getAccessToken()}`,
+          },
+        }).then((response)=>{
+          return response.data
+        }).catch((err)=>{
+          return err.response.data
+        })
+  }
     async updateUserProfile(details:any){
         return api.put<response, response>("user", details,{
             headers: {
@@ -46,3 +87,5 @@ export default class UserService{
           });
       }
 }
+const userService = new UserService();
+export default userService;

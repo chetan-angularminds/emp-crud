@@ -3,7 +3,13 @@ import dbLogger from "../middlewares/dbLogger.middleware.js";
 import { config } from "../config/config.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
+const avatarSchema = mongoose.Schema({
+    url: {
+        type: String,
+        required: [true, "image link is required"],
+    },
+    publicId: String,
+});
 const userSchema = mongoose.Schema(
     {
         fullName: {
@@ -31,13 +37,6 @@ const userSchema = mongoose.Schema(
             unique: true,
             match: [/^[0-9]{10}$/, "Please fill a valid contact number"],
         },
-        userName: {
-            type: String,
-            required: [true, "userName is required"],
-            trim: true,
-            index: true,
-            unique: true,
-        },
         password: {
             type: String,
             required: [true, "password is required"],
@@ -58,13 +57,29 @@ const userSchema = mongoose.Schema(
             enum: ["active", "inactive"],
             default: "active",
         },
-        salary: {
+        age: {
             type: Number
+        },
+        department: {
+            type: String
+        },
+        joiningDate: {
+            type: Date
+        },
+        gender: {
+            type: String,
+            enum: ["Male", "Female"],
+        },
+        salary: {
+            type: Number,
         },
         org: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Organization",
             trim: true,
+        },
+        avatar: {
+            type: avatarSchema,
         },
         deleted: {
             type: Boolean,

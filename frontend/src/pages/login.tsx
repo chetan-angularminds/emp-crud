@@ -7,22 +7,22 @@ import AuthService from "../services/auth.service";
 const LoginPage: React.FC = () => {
   const authService: AuthService = new AuthService();
   const Navigate = useNavigate();
-  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{
-    userName?: string;
+    email?: string;
     password?: string;
   }>({});
   const [touched, setTouched] = useState<{
-    userName?: boolean;
+    email?: boolean;
     password?: boolean;
   }>({});
 
   const validate = () => {
-    const newErrors: { userName?: string; password?: string } = {};
-    if (!userName && touched.userName)
-      newErrors.userName = "User Name is required";
+    const newErrors: { email?: string; password?: string } = {};
+    if (!email && touched.email)
+      newErrors.email = "User Name is required";
     if (!password && touched.password)
       newErrors.password = "Password is required";
     return newErrors;
@@ -30,7 +30,7 @@ const LoginPage: React.FC = () => {
 
   React.useEffect(() => {
     setErrors(validate());
-  }, [userName, password, touched]);
+  }, [email, password, touched]);
 
   const handleBlur = (field: string) => {
     setTouched({ ...touched, [field]: true });
@@ -43,8 +43,8 @@ const LoginPage: React.FC = () => {
     if (Object.keys(validationErrors).length === 0) {
       // Handle login logic here
         setIsLoading(true)
-      const response = await authService.login({ userName, password });
-      console.log("userName:", userName);
+      const response = await authService.login({ email, password });
+      console.log("userName:", email);
       console.log("Password:", password);
 
       if (response.success) {
@@ -58,34 +58,34 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
-        <h2 className="text-2xl font-bold text-center">Login</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-slate-800">
+      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md dark:bg-slate-600 ">
+        <h2 className="text-2xl font-bold text-center dark:text-white">Login</h2>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label
-              htmlFor="userName"
-              className="block text-sm font-medium text-gray-700"
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
             >
-              User Name
+              Email
             </label>
             <input
-              id="userName"
+              id="email"
               type="text"
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               onBlur={() => handleBlur("userName")}
               required
-              className="w-full px-3 py-2 mt-1 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+              className="w-full px-3 py-2 mt-1 border rounded-md dark:text-gray-300 shadow-sm focus:outline-none focus:ring focus:border-blue-300"
             />
-            {touched.userName && errors.userName && (
-              <p className="mt-1 text-sm text-red-600">{errors.userName}</p>
+            {touched.email && errors.email && (
+              <p className="mt-1 text-sm text-red-600">{errors.email}</p>
             )}
           </div>
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Password
             </label>
@@ -96,23 +96,13 @@ const LoginPage: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               onBlur={() => handleBlur("password")}
               required
-              className="w-full px-3 py-2 mt-1 border rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+              className="w-full px-3 py-2 mt-1 border dark:text-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
             />
             {touched.password && errors.password && (
               <p className="mt-1 text-sm text-red-600">{errors.password}</p>
             )}
           </div>
-          <p className="text-center">
-            Don't have an account?{" "}
-            <span
-              className="text-blue-400 cursor-pointer"
-              onClick={() => {
-                Navigate("/auth/register");
-              }}
-            >
-              Register Here
-            </span>
-          </p>
+          
           <button
             type="submit"
             className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"
@@ -136,6 +126,17 @@ const LoginPage: React.FC = () => {
             </svg>}
             
           </button>
+          <p className="text-center dark:text-white">
+            Don't have an account?{" "}
+            <span
+              className="text-blue-400 cursor-pointer dark:text-blue-300"
+              onClick={() => {
+                Navigate("/auth/register");
+              }}
+            >
+              Register Here
+            </span>
+          </p>
         </form>
       </div>
     </div>

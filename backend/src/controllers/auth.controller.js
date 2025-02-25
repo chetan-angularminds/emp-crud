@@ -13,8 +13,8 @@ const register = asyncHandler(async (req, res) => {
 
 // Login callback function
 const login = asyncHandler(async (req, res) => {
-    const { userName, password } = req.body;
-    const user = await User.findOne({ userName });
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
 
     if (!user) {
         throw new ApiError(401, "User not found");

@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { response } from "../interfaces/auth.interfaces";
-import { Employee, NewEmployee } from "../interfaces/employee.interfaces";
+import { Employee } from "../interfaces/employee.interfaces";
 import api from "./api.service";
 import AuthService from "./auth.service";
 
@@ -37,7 +38,7 @@ export default class EmployeeService {
         return err.response.data;
       });
   }
-  async createEmployee(employee: NewEmployee): Promise<response> {
+  async createEmployee(employee: any): Promise<response> {
     return api
       .post<response, response>("employees", employee, {
         headers: {

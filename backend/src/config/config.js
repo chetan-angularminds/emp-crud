@@ -14,8 +14,11 @@ const envVarsSchema = joi
         ACCESS_TOKEN_EXPIRY: joi
             .string()
             .description("JWT expiration time"),
-    })
-    .unknown();
+        CLOUDINARY_CLOUD_NAME: joi.string().description("Cloudinary cloud name"),
+        CLOUDINARY_API_KEY: joi.string().description("CLoudinary API key"),
+        CLOUDINARY_API_SECRET: joi.string().description("Cloudinary api secret")
+
+    }).unknown();
 
 const { value: envVars, error } = envVarsSchema
     .prefs({ errors: { label: "key" } })
@@ -43,4 +46,9 @@ export const config = {
         secret: envVars.ACCESS_TOKEN_SECRET_KEY,
         expiry: envVars.ACCESS_TOKEN_EXPIRY,
     },
+    cloudinary: {
+        cloudName: envVars.CLOUDINARY_CLOUD_NAME,
+        apiKey: envVars.CLOUDINARY_API_KEY,
+        apiSecret: envVars.CLOUDINARY_API_SECRET
+    }
 };
