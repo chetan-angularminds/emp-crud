@@ -248,7 +248,7 @@ export default function EmployeeList() {
         <div className="inline-block min-w-full min-h-fit">
           <table className=" w-full border-collapse min-h-fit ">
             <thead>
-              <tr className="bg-gray-200 dark:bg-slate-600 py-4">
+              <tr className="bg-gray-200 dark:bg-slate-600 h-12">
                 <th
                   className="p-2 text-left cursor-pointer text-nowrap "
                   onClick={() => handleSort("fullName")}
@@ -292,13 +292,13 @@ export default function EmployeeList() {
             </thead>
             <tbody>
               {employees.map((employee, i) => (
-                <tr key={employee._id} className="border-b py-2.5 hover:bg-gray-50 dark:hover:bg-slate-700">
-                  <td className="p-2">{employee.fullName}</td>
-                  <td className="p-2">{employee.email}</td>
-                  <td className="p-2">{employee.contactNumber}</td>
-                  <td className="p-2">{employee.role}</td>
-                  <td className="p-2">{employee.status}</td>
-                  {isAdmin && <td className="p-2">&#8377;{employee.salary}</td>}
+                <tr key={employee._id} className="border-b py-2.5 hover:bg-gray-50 dark:hover:bg-slate-700 " >
+                  <td className="p-2" onClick={()=>Navigate(`/employee/${employee._id}`)}>{employee.fullName}</td>
+                  <td className="p-2" onClick={()=>Navigate(`/employee/${employee._id}`)}>{employee.email}</td>
+                  <td className="p-2" onClick={()=>Navigate(`/employee/${employee._id}`)}>{employee.contactNumber}</td>
+                  <td className="p-2" onClick={()=>Navigate(`/employee/${employee._id}`)}>{employee.role}</td>
+                  <td className="p-2" onClick={()=>Navigate(`/employee/${employee._id}`)}>{employee.status}</td>
+                  {isAdmin && <td className="p-2" onClick={()=>Navigate(`/employee/${employee._id}`)}>&#8377;{employee.salary}</td>}
                   {isAdmin && (
                     <td className="p-2">
                       <div className="relative">

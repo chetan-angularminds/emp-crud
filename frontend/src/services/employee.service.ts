@@ -25,7 +25,7 @@ export default class EmployeeService {
   }
   async getEmployee(id: string): Promise<response> {
     return api
-      .get<response, response>(`employees/${id}`, {
+      .get<response, response>(`employees/employee/${id}`, {
         headers: {
           Authorization: `Bearer ${this.authService.getAccessToken()}`,
         },

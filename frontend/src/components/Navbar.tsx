@@ -105,24 +105,30 @@ const Navbar: React.FC = () => {
             {!isLoading && <img src={user?.avatar?.url ? user?.avatar?.url : `https://avatar.iran.liara.run/public/${user?.gender ==="Male" ? "boy":user?.gender==="Female"? "girl":""}?name=${user?.fullName}`  } className=" "/>}
           </button>
           {dropdownOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-700  rounded-md shadow-lg py-2">
+            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-700 rounded-md shadow-lg py-2">
               <button
-              onClick={()=>{handleProfile(); setDropdownOpen(!dropdownOpen)}}
-                className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left dark:hover:bg-slate-500 dark:text-white"
+              onClick={() => { handleProfile(); setDropdownOpen(!dropdownOpen); }}
+              className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left dark:hover:bg-slate-500 dark:text-white"
               >
-                My Profile
+              My Profile
               </button>
               <button
-                onClick={()=>{setShowChangePasswordForm(true);setDropdownOpen(!dropdownOpen)}}
-                className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left dark:hover:bg-slate-500 dark:text-white"
+              onClick={() => { setShowChangePasswordForm(true); setDropdownOpen(!dropdownOpen); }}
+              className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left dark:hover:bg-slate-500 dark:text-white"
               >
-                Change Password
+              Change Password
               </button>
               <button
-                onClick={()=>{handleLogout(); setDropdownOpen(!dropdownOpen)}}
-                className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left dark:hover:bg-slate-500 dark:text-white"
+              onClick={() => { handleLogout(); setDropdownOpen(!dropdownOpen); }}
+              className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left dark:hover:bg-slate-500 dark:text-white"
               >
-                Logout
+              Logout
+              </button>
+              <button
+              onClick={() => { /* Add your theme change logic here */ }}
+              className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left dark:hover:bg-slate-500 dark:text-white"
+              >
+              Change Theme
               </button>
             </div>
           )}

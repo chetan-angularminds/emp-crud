@@ -11,6 +11,8 @@ import { JSX, useEffect, useState } from "react";
 import { getToast } from "./services/toasts.service";
 import UserProfile from "./pages/my-profile";
 import AuthService from "./services/auth.service";
+import EmployeeDetails from "./pages/employees/employeeDetails";
+import themeService from "./services/theme.service";
 function App() {
   const location = useLocation();
  const authService = new AuthService();
@@ -54,6 +56,7 @@ function App() {
       <Route path="/auth/login" element={<CanAccess><Login /></CanAccess>} />
       </Route>
       <Route path="/organisation" element={<ProtectedRoute><OrganisationDetails /></ProtectedRoute>} />
+      <Route path="/employee/:id" element={<ProtectedRoute><EmployeeDetails /></ProtectedRoute>} />
       </Routes>
       </main>
     </>
